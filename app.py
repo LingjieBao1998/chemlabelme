@@ -1222,7 +1222,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if not self.canvas.editing():
             return
-        if item is not None:
+        # 注意: 从 QAction.triggered 触发时会传入 checked=False 而不是 None,
+        # 所以这里用真值判断(与 editLabel 一致), 不能写成 item is not None
+        if item:
             items = [item]
         else:
             items = self.labelList.selectedItems()
