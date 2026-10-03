@@ -90,7 +90,12 @@ def distancetoline(point, line):
         return np.linalg.norm(p3 - p2)
     if np.linalg.norm(p2 - p1) == 0:
         return np.linalg.norm(p3 - p1)
-    return np.linalg.norm(np.cross(p2 - p1, p1 - p3)) / np.linalg.norm(p2 - p1)
+    # np.cross 对二维向量的用法在 NumPy 2.0 被弃用/移除(各小版本行为不一致,
+    # 有的版本直接抛 ValueError), 这里按定义直接算二维叉积:
+    # |u x v| = |u_x * v_y - u_y * v_x|
+    u = p2 - p1
+    v = p1 - p3
+    return abs(u[0] * v[1] - u[1] * v[0]) / np.linalg.norm(u)
 
 
 def fmtShortcut(text):
