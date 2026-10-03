@@ -1429,6 +1429,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         def format_shape(s):
             data = s.other_data.copy()
+            # text 统一由下面写入(默认空串), 先去掉 here 以免它在 JSON 里的位置随来源变化
+            data.pop("text", None)
             data.update(
                 dict(
                     label=s.label.encode("utf-8") if PY2 else s.label,
@@ -1438,6 +1440,8 @@ class MainWindow(QtWidgets.QMainWindow):
                     shape_type=s.shape_type,
                     flags=s.flags,
                     mask=None if s.mask is None else utils.img_arr_to_b64(s.mask),
+                    # 文字注释: 默认空字符串, 保证每个 shape 保存时都带 text 字段
+                    text=(s.other_data or {}).get("text") or "",
                 )
             )
             return data
